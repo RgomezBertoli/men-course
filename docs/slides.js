@@ -1,14 +1,14 @@
 const keypress = require('keypress');
 const util = require('util');
-const exec = util.promisify(require('child_process').exec);
 const stdin = process.stdin;
+const stdout = process.stdout;
 
 const slides = require('./slides/index');
 
 {
     let currentSlide = 0;
-    let lineCols = 0;
-    let numLines = 0;
+    let lineCols = stdout.columns;
+    let numLines = stdout.rows;
 
     function config() {
         keypress(stdin);
@@ -19,12 +19,7 @@ const slides = require('./slides/index');
         stdin.resume();
         stdin.on('keypress', evaluateKey);
 
-        getTermSize().then(({lines, cols}) => {
-            lineCols = cols;
-            numLines = lines;
-            writeSlide(currentSlide);
-        })
-            .catch(console.log);
+        writeSlide(currentSlide);
     }
 
     function evaluateKey(str, key) {
@@ -61,20 +56,6 @@ const slides = require('./slides/index');
         } else {
             console.log(line);
         }
-    }
-
-
-    function getTermSize() {
-        return new Promise((res, rej) => {
-            exec('resize').then(function ({ error, stdout, stderr }) {
-                if (error) {
-                    rej(error);
-                }
-                const lines = Number(stdout.match(/lines=(\d+);/i)[1]);
-                const cols = Number(stdout.match(/columns=(\d+);/i)[1]);
-                res({ lines, cols });
-            });
-        });
     }
 
     config();
