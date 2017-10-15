@@ -1,14 +1,18 @@
 const keypress = require('keypress');
 const util = require('util');
+const colors = require('colors');
 const stdin = process.stdin;
 const stdout = process.stdout;
 
 const slides = require('./slides/index');
 
 {
+    const lineCols = stdout.columns;
+    const numLines = stdout.rows;
+    const supportedColors = Object.keys(colors);
+    const tabSize = 8;
+
     let currentSlide = 0;
-    let lineCols = stdout.columns;
-    let numLines = stdout.rows;
 
     function config() {
         keypress(stdin);
@@ -24,6 +28,7 @@ const slides = require('./slides/index');
 
     function evaluateKey(str, key) {
         if (key.sequence === '\u0003') {
+            console.clear && console.clear() || stdout.write('\033c');
             process.exit();
         }
         if (key.name === 'up' || key.name === 'left') {
@@ -37,10 +42,10 @@ const slides = require('./slides/index');
     }
 
     function writeSlide(number) {
-        console.clear && console.clear() || stdout.write('\033c');
         const slideNames = Object.keys(slides);
 
         if (number < slideNames.length) {
+            console.clear && console.clear() || stdout.write('\033c');
             const slide = slides[slideNames[number]];
             slide.forEach(writeLine);
         } else {
@@ -49,18 +54,32 @@ const slides = require('./slides/index');
     }
 
     function writeLine(line) {
-        stdout.write(parseLine(line));
+        const formatedLine = parseLine(line);
+        stdout.write(formatedLine);
     }
 
     function parseLine(line) {
-        if (line === '<br>') {
-            return '\n' + new Array(lineCols).join('-');
+        let text = line;
+
+        if (text.includes('<br>')) {
+            const br = Array(lineCols).fill().map(() => '-').join('');
+            return text.replace(/<br>(.*)/, `${br}$1`);
         }
-        if (line === '!!whiteSpace') {
-            return '\n';
+        if (text.includes('<white-space>')) {
+            const whiteSpace = '\n';
+            stdout.write(whiteSpace);
+            text = text.replace(/<white-space>(.*)/, `$1`);
+        }
+        if (text.includes('<center>')) {
+            text = text.replace(/<center>(.*)<\/center>/, `$1`);
+            const startOn = Math.round(lineCols / 2 - text.length / 2);
+            const leftSpace = Array(startOn).fill().map(() => ' ').join('');
+            text = `${leftSpace}${text}`;
+        } else {
+            text = '\t' + text;
         }
 
-        return line;
+        return text + '\n';
     }
 
     config();
