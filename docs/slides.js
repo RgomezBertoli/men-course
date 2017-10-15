@@ -27,7 +27,7 @@ const slides = require('./slides/index');
     }
 
     function evaluateKey(str, key) {
-        if (key.sequence === '\u0003') {
+        if (key.sequence === '\u0003' || key.name === 'escape') {
             console.clear && console.clear() || stdout.write('\033c');
             process.exit();
         }
