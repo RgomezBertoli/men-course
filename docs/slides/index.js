@@ -2,12 +2,12 @@ const colors = require('colors');
 
 const intro = [
     colors.blue('Curso de MEN'),
-    '!!sep'
+    '<br>'
 ];
 
 const slide1 = [
     colors.blue('Introducción al curso'),
-    '!!sep'
+    '<br>'
 ];
 
 module.exports = {

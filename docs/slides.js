@@ -37,7 +37,7 @@ const slides = require('./slides/index');
     }
 
     function writeSlide(number) {
-        console.clear();
+        console.clear && console.clear() || stdout.write('\033c');
         const slideNames = Object.keys(slides);
 
         if (number < slideNames.length) {
@@ -49,13 +49,18 @@ const slides = require('./slides/index');
     }
 
     function writeLine(line) {
-        if (line === '!!sep') {
-            console.log(new Array(lineCols).join('-'));
-        } else if (line === '!!whiteLine') {
-            console.log('\n');
-        } else {
-            console.log(line);
+        stdout.write(parseLine(line));
+    }
+
+    function parseLine(line) {
+        if (line === '<br>') {
+            return '\n' + new Array(lineCols).join('-');
         }
+        if (line === '!!whiteSpace') {
+            return '\n';
+        }
+
+        return line;
     }
 
     config();
