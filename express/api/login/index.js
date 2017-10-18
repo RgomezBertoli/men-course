@@ -1,16 +1,22 @@
 const { Router } = require('express');
+const getUserDataRouter = require('./get-user-data/index');
 
 const LoginRouter = Router();
 
 var usuario = {};
 
-LoginRouter.post('/login', function(req, res){
+LoginRouter.post('/login', function (req, res, next) {
     usuario = req.body;
-    res.status(200).send(usuario);
+
+    if (usuario.pass === 'asdf1234') {
+        res.status(200).send(usuario);
+    } else {
+        const error = { description: 'Wrong Login' };
+
+        next(error);
+    }
 });
 
-LoginRouter.get('/user', function(req, res){
-    res.send(usuario);
-});
+LoginRouter.use('/user', getUserDataRouter);
 
 module.exports = LoginRouter;
