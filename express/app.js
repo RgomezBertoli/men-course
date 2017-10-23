@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const odm = require('mongoose');
 
 const requestLogger = require('./middlewares/logger');
 const errorHandler = require('./middlewares/error-handler');
@@ -16,7 +17,8 @@ app.use(cors({
 app.use(requestLogger);
 
 app.use('/api', [
-    require('./api/login/index')
+    require('./api/login/index'),
+    require('./api/register/index')
 ]);
 
 app.use('/private', checkToken);
@@ -26,6 +28,9 @@ app.use('/private', [
 
 app.use(errorHandler)
 
-app.listen(9999, function(){
-    console.log('El servidor esta escuchando el puerto 9999');
-});
+odm.createConnection('mongodb://localhost:27051/', function(){
+    console.log('Se ha conectado correctamente a la base de datos');
+    app.listen(9999, function(){
+        console.log('El servidor esta escuchando el puerto 9999');
+    });
+})
