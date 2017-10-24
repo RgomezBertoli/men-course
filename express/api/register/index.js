@@ -3,15 +3,19 @@ const UserModel = require('../../models/user');
 
 const registerRouter = Router();
 
-registerRouter.post('/new', function (req, res) {
+registerRouter.post('/new', function (req, res, next) {
     const body = req.body;
 
     if (body) {
-        UserModel.create(body)
-            .then(user => {
-                res.send({ user });
-            })
-            .catch(error => next(error));
+        var user = new UserModel(body);
+
+        user.save(function (error) {
+            if (error) {
+                return next(error);
+            }
+
+            res.send({ user });
+        });
     } else {
         const error = {
             description: 'Wrong Body'

@@ -3,6 +3,8 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const odm = require('mongoose');
 
+const config = require('./config/constants');
+
 const requestLogger = require('./middlewares/logger');
 const errorHandler = require('./middlewares/error-handler');
 const { checkToken } = require('./middlewares/token');
@@ -28,9 +30,11 @@ app.use('/private', [
 
 app.use(errorHandler)
 
-odm.createConnection('mongodb://localhost:27051/', function(){
-    console.log('Se ha conectado correctamente a la base de datos');
-    app.listen(9999, function(){
-        console.log('El servidor esta escuchando el puerto 9999');
-    });
+odm.connect('mongodb://localhost:27051/men-course', { useMongoClient: true }, function (err) {
+    if (!err) {
+        console.log('Se ha conectado correctamente a la base de datos');
+        app.listen(9999, function () {
+            console.log('El servidor esta escuchando el puerto 9999');
+        });
+    }
 })
