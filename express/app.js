@@ -3,8 +3,6 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const odm = require('mongoose');
 
-const config = require('./config/constants');
-
 const requestLogger = require('./middlewares/logger');
 const errorHandler = require('./middlewares/error-handler');
 const { checkToken } = require('./middlewares/token');
