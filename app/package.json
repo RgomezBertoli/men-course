@@ -1,0 +1,21 @@
+{
+  "name": "final-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ruben Gomez",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "cors": "^2.8.4",
+    "express": "^4.16.2",
+    "helmet": "^3.9.0",
+    "jwt-simple": "^0.5.1",
+    "log4js": "^2.3.9",
+    "md5": "^2.2.1",
+    "mongoose": "^4.12.4"
+  }
+}
