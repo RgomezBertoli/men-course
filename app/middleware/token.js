@@ -21,7 +21,7 @@ function checkToken(req, res, next) {
         const data = decode(token);
         const now = moment();
 
-        if (data && now.isAfter(moment(data.expiredDate))) {
+        if (data && now.isBefore(moment(data.expiredDate))) {
             req.user = data;
             next();
         } else {
