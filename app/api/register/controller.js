@@ -16,7 +16,7 @@ function post(req, res) {
         UserModel.create(user, function (err, result) {
             if (!err && result) {
                 const token = encode({
-                    id: result.id
+                    id: result._id
                 });
 
                 res.setHeader('token', token);
