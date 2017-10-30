@@ -29,8 +29,8 @@ function checkToken(req, res, next) {
         }
     } catch (thrown) {
         const error = { description: 'NOT AUTHORISED' };
-        
-        next(error);
+
+        res.status(403).send({ error });
     }
 }
 
