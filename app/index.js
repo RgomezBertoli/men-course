@@ -6,16 +6,17 @@ const odm = require('mongoose');
 const log4js = require('log4js');
 
 const { mongodb, processConf } = require('./config/constants');
+const { checkToken } = require('./middleware/token');
 
 log4js.configure({
     appenders: {
         request: { type: 'console', category: 'request' },
         features: { type: 'console', category: 'features' }
     },
-    categories:{
+    categories: {
         request: { level: 'all', appenders: ['request'] },
         features: { level: 'all', appenders: ['features'] },
-        default: { level: 'all', appenders: ['features'] }    
+        default: { level: 'all', appenders: ['features'] }
     },
     replaceConsole: true
 });
@@ -27,6 +28,17 @@ const app = express();
 app.use(helmet());
 app.use(bodyParser.json());
 app.use(cors());
+app.use(log4js.connectLogger(logger, { level: log4js.levels.INFO }));
+
+
+app.use('/public', [
+    require('./api/login/index')
+]);
+
+app.use('/private', checkToken);
+/*app.use('private', [
+
+]);*/
 
 const dbURI = `${mongodb.method}${mongodb.user}:${mongodb.pass}${mongodb.host}${mongodb.db}`;
 
