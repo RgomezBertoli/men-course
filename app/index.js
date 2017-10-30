@@ -32,7 +32,8 @@ app.use(log4js.connectLogger(logger, { level: log4js.levels.INFO }));
 
 
 app.use('/public', [
-    require('./api/login/index')
+    require('./api/login/index'),
+    require('./api/register/index')
 ]);
 
 app.use('/private', checkToken);
