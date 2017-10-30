@@ -37,9 +37,9 @@ app.use('/public', [
 ]);
 
 app.use('/private', checkToken);
-/*app.use('private', [
-
-]);*/
+app.use('/private', [
+    require('./api/tasks/index')
+]);
 
 const dbURI = `${mongodb.method}${mongodb.user}:${mongodb.pass}${mongodb.host}${mongodb.db}`;
 
